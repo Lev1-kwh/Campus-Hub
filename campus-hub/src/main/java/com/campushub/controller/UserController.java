@@ -1,6 +1,7 @@
 package com.campushub.controller;
 
 import com.campushub.dto.LoginRequest;
+import com.campushub.dto.LoginResponse;
 import com.campushub.entity.User;
 import com.campushub.service.Userservice;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,13 +24,17 @@ public class UserController {
         return "注册成功";
     }
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest){
-        User user = userservice.login(loginRequest);
+    public LoginResponse login(@RequestBody LoginRequest loginRequest){
+       String token= userservice.login(loginRequest);
+        LoginResponse loginResponse = new LoginResponse();
 
-        if (user == null) {
-            return "用户名不存在或者密码错误，登录失败";
+        if (token == null) {
+            loginResponse.setMessage("用户名不存在或者密码错误，登录失败");
+            return loginResponse;
         } else {
-            return "登录成功";
+            loginResponse.setMessage("登录成功");
+            loginResponse.setToken(token);
+            return loginResponse;
         }
     }
 }

@@ -5,5 +5,5 @@ import com.campushub.entity.User;
 
 public interface Userservice {
     void register(User user);
-    User login(LoginRequest loginRequest);
+    String  login(LoginRequest loginRequest);
 }

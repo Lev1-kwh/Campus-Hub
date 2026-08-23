@@ -5,11 +5,13 @@ spring:
     password: kwh20070116
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-
 server:
   port: 8080
+
+jwt:
+  secret: CampusHub-2026-JWT-Secret-Key-For-Campus-Hub-Backend-Long-Random-Key
+  expiration: 604800000

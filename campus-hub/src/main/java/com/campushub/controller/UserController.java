@@ -1,5 +1,6 @@
 package com.campushub.controller;
 
+import com.campushub.dto.LoginRequest;
 import com.campushub.entity.User;
 import com.campushub.service.Userservice;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,5 +21,15 @@ public class UserController {
     public String register(@RequestBody User user){
         userservice.register(user);
         return "注册成功";
+    }
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest loginRequest){
+        User user = userservice.login(loginRequest);
+
+        if (user == null) {
+            return "用户名不存在或者密码错误，登录失败";
+        } else {
+            return "登录成功";
+        }
     }
 }

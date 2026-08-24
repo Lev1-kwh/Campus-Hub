@@ -5,6 +5,8 @@ import com.campushub.entity.Post;
 import com.campushub.mapper.PostMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PostServiceImpl implements PostService{
     private final PostMapper postMapper;
@@ -32,4 +34,10 @@ public class PostServiceImpl implements PostService{
         post.setStatus(1);
         postMapper.insert(post);
     }
+    @Override
+    public List<Post> getPostList(){
+        return postMapper.selectList(null);
+
+    }
+
 }

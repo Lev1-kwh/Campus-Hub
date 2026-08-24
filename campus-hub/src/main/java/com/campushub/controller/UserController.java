@@ -3,7 +3,7 @@ package com.campushub.controller;
 import com.campushub.dto.LoginRequest;
 import com.campushub.dto.LoginResponse;
 import com.campushub.entity.User;
-import com.campushub.service.Userservice;
+import com.campushub.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private final Userservice userservice;
+    private final UserService userservice;
 
-    public UserController(Userservice userservice) {
+    public UserController(UserService userservice) {
         this.userservice = userservice;
     }
 

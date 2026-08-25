@@ -18,6 +18,7 @@ public class Post {
     private String imageUrl;//图片地址
     private Integer viewCount;//类型设置为Integer而不是是避免数据库数据为null时映射到java中的int时不会报错，int类型变量不能为null
     private Integer likeCount;
+    private Integer commentCount;
     private Integer status;//帖子状态
     private LocalDateTime createTime;
     private LocalDateTime updateTime;

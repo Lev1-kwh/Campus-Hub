@@ -31,4 +31,18 @@ public class PostController {
     public List<Post> getPostList(){
         return postService.getPostList();
 }
+//根据帖子id查询帖子
+@GetMapping("/{id}")
+    public Post getPostById(@PathVariable Long id){
+        return postService.getPostById(id);
+}
+//点赞帖子
+@PostMapping("/{id}/like")
+    public PostResponse postLike(@PathVariable Long id,HttpServletRequest request){
+        Long userId = (Long) request.getAttribute("userId");
+        postService.likePost(userId,id);
+    PostResponse response = new PostResponse();
+    response.setMessage("点赞成功");
+    return response;
+}
 }

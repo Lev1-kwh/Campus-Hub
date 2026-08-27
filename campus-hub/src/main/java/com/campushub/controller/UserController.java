@@ -30,11 +30,10 @@ public class UserController {
 
         if (token == null) {
             loginResponse.setMessage("用户名不存在或者密码错误，登录失败");
-            return loginResponse;
         } else {
             loginResponse.setMessage("登录成功");
             loginResponse.setToken(token);
-            return loginResponse;
         }
+        return loginResponse;
     }
 }

@@ -1,7 +1,6 @@
 package com.campushub.interceptor;
 
 import com.campushub.utils.JwtUtil;
-import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
@@ -16,7 +15,8 @@ public class JwtInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,Object handler){
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,Object handler)
+    throws Exception{
        String authHeader = request.getHeader("Authorization");
        if (authHeader==null||!authHeader.startsWith("Bearer ")){
            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -30,7 +30,6 @@ public class JwtInterceptor implements HandlerInterceptor {
             return true;
         }catch (Exception e){
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            e.printStackTrace();
             return false;
         }
     }

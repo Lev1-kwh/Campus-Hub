@@ -56,7 +56,7 @@ public class PostController {
         }
         return response;
     }
-
+    //评论帖子
     @PostMapping("/{id}/comment")
     public CommentResponse postComment(@PathVariable Long id, @RequestBody CommentRequest commentRequest, HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
@@ -65,18 +65,27 @@ public class PostController {
         response.setMessage("评论成功");
         return response;
     }
-
+    //根据帖子id查询所有评论
     @GetMapping("/{id}/commentlist")
     public List<Comment> selectCommentsById(@PathVariable Long id) {
-        return postService.selectPostComment(id);
+        return postService.selectPostComments(id);
     }
-
+    //根据评论id删除某条评论
     @DeleteMapping("/comment/{commentId}")
     public CommentResponse deleteComment(@PathVariable Long commentId, HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         postService.deleteComment(userId, commentId);
         CommentResponse response = new CommentResponse();
         response.setMessage("评论删除成功");
+        return response;
+    }
+    //根据帖子id删除帖子
+    @DeleteMapping("/{id}")
+    public PostResponse deletePost(@PathVariable Long id,HttpServletRequest request){
+        Long userId = (Long) request.getAttribute("userId");
+        postService.deletePost(userId, id);
+        PostResponse response = new PostResponse();
+        response.setMessage("删除帖子成功");
         return response;
     }
 }

@@ -9,12 +9,13 @@ import com.campushub.entity.PostLike;
 import java.util.List;
 
 public interface PostService {
-    public void post(PostRequest postRequest,Long userId);
-    public List<Post> getPostList();
-    public Post getPostById(Long id);
-    public PostLike selectPostLike(Long userId,Long postId);
-    public boolean likePost (Long userId,Long postId);
-    public void commentPost(Long userId, Long postId, CommentRequest request);
-    public List<Comment> selectPostComment(Long postId);
-    public void deleteComment(Long userId,Long commentId);
+    void post(PostRequest postRequest, Long userId);
+    List<Post> getPostList();
+    Post getPostById(Long id);
+    PostLike selectPostLike(Long userId, Long postId);
+    boolean likePost(Long userId, Long postId);
+    void commentPost(Long userId, Long postId, CommentRequest request);
+    List<Comment> selectPostComments(Long postId);
+    void deleteComment(Long userId, Long commentId);
+    void deletePost(Long userId, Long postId);
 }

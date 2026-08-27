@@ -6,6 +6,7 @@ import com.campushub.dto.PostRequest;
 import com.campushub.entity.Comment;
 import com.campushub.entity.Post;
 import com.campushub.entity.PostLike;
+import com.campushub.exception.BusinessException;
 import com.campushub.mapper.CommentMapper;
 import com.campushub.mapper.PostLikeMapper;
 import com.campushub.mapper.PostMapper;
@@ -31,7 +32,7 @@ public class PostServiceImpl implements PostService{
     }
 
 
-
+    //发布帖子
     @Override
     public void post(PostRequest postRequest,Long userId){
         Post post = new Post();
@@ -49,11 +50,13 @@ public class PostServiceImpl implements PostService{
         post.setStatus(1);
         postMapper.insert(post);
     }
+    //查询所有帖子
     @Override
     public List<Post> getPostList(){
         return postMapper.selectList(null);
 
     }
+    //浏览单条帖子详情
     @Override
     public Post getPostById(Long id){
         //根据帖子id查询帖子
@@ -65,6 +68,7 @@ public class PostServiceImpl implements PostService{
         return post;
     }
     @Override
+    //查询某用户对某帖子的点赞记录
    public PostLike selectPostLike(Long userId,Long postId){
        QueryWrapper<PostLike> wrapper = new QueryWrapper<>();
        wrapper.eq("user_id", userId)
@@ -75,6 +79,7 @@ public class PostServiceImpl implements PostService{
    }
 
    @Override
+   //点赞帖子
    //涉及多个数据库操作，添加事务注解将数据库操作绑定在一起
    @Transactional
    public boolean likePost (Long userId,Long postId){
@@ -104,7 +109,9 @@ public class PostServiceImpl implements PostService{
             return false;
    }
     }
+
     @Override
+    //评论帖子
     @Transactional
     public void commentPost(Long userId, Long postId, CommentRequest request){
         //评论业务逻辑基本与点赞一致
@@ -119,21 +126,22 @@ public class PostServiceImpl implements PostService{
         postMapper.updateById(post);
     }
     @Override
+    //删除评论
     @Transactional
     public void deleteComment(Long userId,Long commentId){
         // 查询评论
         Comment comment = commentMapper.selectById(commentId);
         if (comment == null) {
-            throw new RuntimeException("该评论不存在");
+            throw new BusinessException(404,"该评论不存在");
         }
         // 查询评论所属帖子
         Post post = postMapper.selectById(comment.getPostId());
         if (post == null) {
-            throw new RuntimeException("该帖子不存在");
+            throw new BusinessException(404,"该帖子不存在");
         }
         // 权限校验：只有评论作者可以删除
         if (!comment.getUserId().equals(userId)) {
-            throw new RuntimeException("无权限删除该评论");
+            throw new BusinessException(403,"无权限删除该评论");
         }
         // 删除评论
         commentMapper.deleteById(commentId);
@@ -145,10 +153,35 @@ public class PostServiceImpl implements PostService{
         postMapper.updateById(post);
     }
     @Override
-    public List<Comment> selectPostComment(Long postId){
+    //查询某条帖子的所有评论
+    public List<Comment> selectPostComments(Long postId){
         QueryWrapper<Comment> wrapper = new QueryWrapper<>();
         wrapper.eq("post_id",postId);
         List<Comment> comments =commentMapper.selectList(wrapper);
         return comments;
     }
-}
+    @Override
+    //删除帖子
+    @Transactional
+    public void deletePost(Long userId,Long postId){
+        //查询帖子是否存在
+        Post post = postMapper.selectById(postId);
+        if (post==null){
+            throw new BusinessException(404,"该帖子不存在");
+        }
+        //权限校验：只有帖子作者自己才能删除帖子
+        Long authorId = post.getUserId();
+        if (!userId.equals(authorId)){
+            throw new BusinessException(403,"无权限删除该帖子");
+        }
+
+        QueryWrapper<PostLike> wrapper1 = new QueryWrapper<>();
+        QueryWrapper<Comment> wrapper2 = new QueryWrapper<>();
+        wrapper1.eq("post_id",postId);
+        wrapper2.eq("post_id",postId);
+        postLikeMapper.delete(wrapper1);
+        commentMapper.delete(wrapper2);
+        postMapper.deleteById(postId);
+        }
+    }
+
